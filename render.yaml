@@ -1,0 +1,29 @@
+services:
+  - type: web
+    name: smart-outfit
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: smart-outfit-db
+          property: connectionString
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: ADMIN_NAME
+        value: SMART OUTFIT Admin
+      - key: ADMIN_EMAIL
+        value: admin@smartoutfit.com
+      - key: ADMIN_PASSWORD
+        sync: false
+
+databases:
+  - name: smart-outfit-db
+    plan: free
+    databaseName: smart_outfit
+    user: smart_outfit_user
