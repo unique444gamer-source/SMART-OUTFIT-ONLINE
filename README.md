@@ -6,7 +6,7 @@ A Node.js + Express + PostgreSQL fashion store, prepared for GitHub and Render d
 - Responsive customer storefront, category filtering, search and shopping bag\n- Customer registration and login
 - Checkout with Cash on Delivery and stock validation
 - Order tracking by order number
-- Admin login with bcrypt password hashing and PostgreSQL-backed sessions
+- Admin login with bcrypt password hashing and PostgreSQL-backed sessions (session table initialized once by the app)
 - Admin dashboard, products, orders/status updates, customer list, coupons
 - Branding settings: change website name, tagline, announcement, delivery fee and upload logo
 - PostgreSQL schema + initial demo products + first admin account created on startup

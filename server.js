@@ -20,8 +20,8 @@ app.use(helmet({ contentSecurityPolicy: false }));
 app.use(express.json({ limit: "2mb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(session({
-  store: new PgSession({ pool, tableName: "user_sessions", createTableIfMissing: true }),
-  secret: process.env.SESSION_SECRET || "local-development-secret-change-before-deploy-please",
+  store: new PgSession({ pool, tableName: "user_sessions" }),
+  secret: process.env.SESSION_SECRET || (isProd ? (() => { throw new Error("SESSION_SECRET is required in production"); })() : "local-development-secret-change-before-deploy-please"),
   resave: false, saveUninitialized: false,
   cookie: { httpOnly: true, secure: isProd, sameSite: "lax", maxAge: 1000*60*60*24*7 }
 }));
@@ -58,6 +58,12 @@ async function initDb() {
       id SERIAL PRIMARY KEY, code TEXT UNIQUE NOT NULL, discount_percent INTEGER NOT NULL,
       active BOOLEAN DEFAULT TRUE, expires_at TIMESTAMPTZ
     );
+    CREATE TABLE IF NOT EXISTS user_sessions (
+      sid VARCHAR NOT NULL PRIMARY KEY,
+      sess JSON NOT NULL,
+      expire TIMESTAMP(6) NOT NULL
+    );
+    CREATE INDEX IF NOT EXISTS user_sessions_expire_idx ON user_sessions(expire);
   `);
   const email = (process.env.ADMIN_EMAIL || "admin@smartoutfit.com").toLowerCase();
   const pass = process.env.ADMIN_PASSWORD || "ChangeThisPassword123!";
